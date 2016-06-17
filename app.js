@@ -1,4 +1,6 @@
 var request = require('request');
+var express = require('express');
+var app = express();
 var config = require('./config');
 
 require('dotenv').config();
@@ -13,6 +15,12 @@ var options = {
 	}
 };
 
-request(options, (err, res) => {
-	console.log(JSON.parse(res.body));
+app.get('/', function(req, res) {
+	request(options, (err, response) => {
+		res.json(JSON.parse(response.body));
+	});
+});
+
+app.listen(4000, function() {
+	console.log('app listening');
 });
