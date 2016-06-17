@@ -16,26 +16,32 @@ var options = {
 	}
 };
 
-var router = express.Router();
-
-router.use(function(req, res, next) {
+var middleware = (req, res, next) => {
 	console.log('...Something happen');
 	next();
-});
+};
 
-router.get('/', function(req, res) {
+var greet = (req, res) => {
 	res.json({ mensaje: "bienvenido a mi API" });
-});
+};
+
+var getService = (req, res) => {
+	request(options, (err, response) => {
+		res.json(JSON.parse(response.body));
+	});
+};
+
+var router = express.Router();
+
+router.use(middleware);
+
+router.get('/', greet);
 
 router.route('/users')
-	.get(function(req, res){
-		request(options, (err, response) => {
-			res.json(JSON.parse(response.body));
-		});
-	});
+	.get(getService);
 	
 app.use('/api', router);
 
-app.listen(port, function() {
+app.listen(port, () => {
 	console.log('app listening in', port);
 });
