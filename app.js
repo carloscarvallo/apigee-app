@@ -5,6 +5,7 @@ var config = require('./config');
 
 require('dotenv').config();
 
+var port = process.env.PORT || 8080;
 var url = config.serviceUrl;
 var apigeeToken = process.env.APIGEE_TOKEN;
 
@@ -15,12 +16,26 @@ var options = {
 	}
 };
 
-app.get('/', function(req, res) {
-	request(options, (err, response) => {
-		res.json(JSON.parse(response.body));
-	});
+var router = express.Router();
+
+router.use(function(req, res, next) {
+	console.log('...Something happen');
+	next();
 });
 
-app.listen(4000, function() {
-	console.log('app listening');
+router.get('/', function(req, res) {
+	res.json({ mensaje: "bienvenido a mi API" });
+});
+
+router.route('/users')
+	.get(function(req, res){
+		request(options, (err, response) => {
+			res.json(JSON.parse(response.body));
+		});
+	});
+	
+app.use('/api', router);
+
+app.listen(port, function() {
+	console.log('app listening in', port);
 });
