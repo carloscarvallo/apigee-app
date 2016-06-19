@@ -24,6 +24,11 @@ db.on('open', function() {
     console.log('Conectado a la base de datos');
 });
 
+require('dotenv').config();
+
+const apigeeUser = process.env.APIGEE_USER,
+	  apigeePass = process.env.APIGEE_PASS;
+
 /*
 require('dotenv').config();
 
@@ -60,6 +65,15 @@ routes.post('/authenticate', function(req, res) {
                 res.json({ success: false, message: 'Authentication failed. Wrong password' });
                 
             } else {
+				
+				const options = {
+				    url: config.oauthUrl,
+				    method: 'POST',
+				    auth: {
+				        user: apigeeUser,
+				        pass: apigeePass
+				    }
+				};
 				
 				request(options, (err, res) => {
 					if (err) throw err
