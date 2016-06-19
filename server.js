@@ -9,7 +9,7 @@ const request = require('request'),
       User = require('./app/models/user'),
       config = require('./config'),
       nunjucks = require('nunjucks');
-	  
+
 mongoose.connect(config.database);
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -23,6 +23,7 @@ db.on('open', function() {
     console.log('Conectado a la base de datos');
 });
 
+// template initialization
 nunjucks.configure('assets', {
     autoescape: true,
     noCache: true,
@@ -36,7 +37,11 @@ const port = process.env.PORT || 8080,
       apigeePass = process.env.APIGEE_PASS;
 
 app.get('/', ( req, res ) => {
-    res.render('index.html', { message: `La API se encuentra en http://localhost:${port}/api` });
+    res.render('index.html');
+});
+
+app.get('/register', ( req, res ) => {
+    res.render('register.html');
 });
 
 app.post('/register', ( req, res ) => {
@@ -50,13 +55,13 @@ app.post('/register', ( req, res ) => {
 		
     user.save(( err ) => {
         if (!err) {            
-            console.log('User saved!');
-            res.json({ success: true, message: 'Usuario creado!' });
+            console.log('Usuario creado!');
+            res.render('register.html', { message: 'Usuario Registrado!' });
 				
         } else {
-            res.json({ success: false, message: 'Usuario no creado!' });
+            console.log('Usuario no creado!');
             if (err.code === 11000) {
-                console.log('Este email ya existe prueba con otro');
+                res.render('register.html', { error: 'Este email ya existe prueba con otro' });
             }
         }
     });
