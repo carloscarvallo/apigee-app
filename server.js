@@ -29,21 +29,6 @@ require('dotenv').config();
 const apigeeUser = process.env.APIGEE_USER,
 	  apigeePass = process.env.APIGEE_PASS;
 
-/*
-require('dotenv').config();
-
-const port = process.env.PORT || 8080,
-	  url = config.serviceUrl,
-	  apigeeToken = process.env.APIGEE_TOKEN;
-
-const options = {
-	url: url,
-	auth: {
-		'bearer': apigeeToken
-	}
-};
-*/
-
 app.get('/', function(req, res) {
 	console.log(`La API se encuentra en http://localhost:${port}/api`);
 });
