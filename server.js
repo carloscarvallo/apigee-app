@@ -26,11 +26,11 @@ require('dotenv').config();
 const apigeeUser = process.env.APIGEE_USER,
 	  apigeePass = process.env.APIGEE_PASS;
 
-app.get('/', function(req, res) {
+app.get('/', ( req, res ) => {
 	console.log(`La API se encuentra en http://localhost:${port}/api`);
 });
 
-app.post('/register', function(req, res) {
+app.post('/register', ( req, res ) => {
 		
 	var user = new User({
 		name: req.body.name,
@@ -38,7 +38,7 @@ app.post('/register', function(req, res) {
 		email: req.body.email
 	});
 		
-	user.save(function(err) {
+	user.save(( err ) => {
 		if (!err) {            
 			console.log('User saved!');
 			res.json({ success: true, message: 'Usuario creado!' });
@@ -56,7 +56,7 @@ app.post('/register', function(req, res) {
 
 const routes = express.Router();
 
-routes.post('/authenticate', function(req, res) {
+routes.post('/authenticate', ( req, res ) => {
     
     User.findOne({
         name: req.body.email
@@ -81,7 +81,7 @@ routes.post('/authenticate', function(req, res) {
 				    }
 				};
 				
-				request(options, (err, res) => {
+				request(options, ( err, res ) => {
 					if (err) throw err
 					
 				    let json = JSON.parse(res.body);
@@ -99,7 +99,7 @@ routes.post('/authenticate', function(req, res) {
     });
 });
 
-routes.use(function(req, res, next) {
+routes.use(( req, res, next ) => {
     var token = req.body.token || req.query.token || req.headers['x-access-token'];
     
     if (token) {
