@@ -73,26 +73,26 @@ routes.post('/authenticate', ( req, res ) => {
             // compare password
             if (bcrypt.compareSync(req.body.password, user.password)) {
             	const options = {
-				url: config.oauthUrl,
-				method: 'POST',
-				auth: {
-					user: apigeeUser,
-					pass: apigeePass
-				}
-			};
+                    url: config.oauthUrl,
+                    method: 'POST',
+                    auth: {
+                        user: apigeeUser,
+                        pass: apigeePass
+                    }
+                };
 				
-			request(options, ( err, response ) => {
-				if (err) throw err
+                request(options, ( err, response ) => {
+                    if (err) throw err
 
-				let json = JSON.parse(response.body);
-				let token = json.access_token;
+                    let json = JSON.parse(response.body);
+                    let token = json.access_token;
 
-				res.json({
-					success: true,
-					message: 'Token creado!',
-					token: token
-				});
-			});
+                    res.json({
+                        success: true,
+                        message: 'Token creado!',
+                        token: token
+                    });
+                });
 				
             } else {
             	res.json({ success: false, message: 'Authentication failed. Wrong password' });
@@ -104,7 +104,7 @@ routes.post('/authenticate', ( req, res ) => {
 routes.use(( req, res, next ) => {
     var token = req.body.token || req.query.token || req.headers['x-access-token'];
     if (token) {
-		// TODO: tratar expiracion del Token, etc
+        // TODO: tratar expiracion del Token, etc
         req.token = token;
         next();
     } else {
