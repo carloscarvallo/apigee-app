@@ -1,14 +1,14 @@
 'use strict';
 const request = require('request'),
-	  express = require('express'),
-	  app = express(),
-	  bodyParser = require('body-parser'),
-	  morgan = require('morgan'),
-	  mongoose = require('mongoose'),
-	  bcrypt = require('bcryptjs'),
-	  User = require('./app/models/user'),
-	  config = require('./config'),
-	  port = process.env.PORT || 8080;
+      express = require('express'),
+      app = express(),
+      bodyParser = require('body-parser'),
+      morgan = require('morgan'),
+      mongoose = require('mongoose'),
+      bcrypt = require('bcryptjs'),
+      User = require('./app/models/user'),
+      config = require('./config'),
+      port = process.env.PORT || 8080;
 	  
 mongoose.connect(config.database);
 
@@ -120,19 +120,19 @@ routes.get('/', ( req, res ) => {
 });
 
 routes.route('/getusers')
-	.get(( req, res ) => {
+    .get(( req, res ) => {
 		
-		const options = {
-			url: config.serviceUrl,
-			auth: {
-				'bearer': req.token
-			}
-		};
+        const options = {
+            url: config.serviceUrl,
+            auth: {
+                'bearer': req.token
+            }
+        };
 		
-		request(options, ( err, response ) => {
-			res.json(JSON.parse( response.body ));
-		});
-	});
+        request(options, ( err, response ) => {
+            res.json(JSON.parse( response.body ));
+        });
+    });
 	
 app.use('/api', routes);
 
