@@ -26,33 +26,33 @@ db.on('open', function() {
 require('dotenv').config();
 
 const apigeeUser = process.env.APIGEE_USER,
-	  apigeePass = process.env.APIGEE_PASS;
+      apigeePass = process.env.APIGEE_PASS;
 
 app.get('/', ( req, res ) => {
-	res.send(`La API se encuentra en http://localhost:${port}/api`);
+    res.send(`La API se encuentra en http://localhost:${port}/api`);
 });
 
 app.post('/register', ( req, res ) => {
 	// hash password
-	const passHashed = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10));
-	let user = new User({
-		name: req.body.name,
-		password: passHashed,
-		email: req.body.email
-	});
+    const passHashed = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10));
+    let user = new User({
+        name: req.body.name,
+        password: passHashed,
+        email: req.body.email
+    });
 		
-	user.save(( err ) => {
-		if (!err) {            
-			console.log('User saved!');
-			res.json({ success: true, message: 'Usuario creado!' });
+    user.save(( err ) => {
+        if (!err) {            
+            console.log('User saved!');
+            res.json({ success: true, message: 'Usuario creado!' });
 				
-		} else {
-			res.json({ success: false, message: 'Usuario no creado!' });
-			if (err.code === 11000) {
-				console.log('Este email ya existe prueba con otro');
-			}
-		}
-	});
+        } else {
+            res.json({ success: false, message: 'Usuario no creado!' });
+            if (err.code === 11000) {
+                console.log('Este email ya existe prueba con otro');
+            }
+        }
+    });
 });
 
 // API ROUTES ------------------------------------------------------------------
@@ -116,12 +116,11 @@ routes.use(( req, res, next ) => {
 });
 
 routes.get('/', ( req, res ) => {
-	res.json({ mensaje: "Bienvenido a la API!" });
+    res.json({ mensaje: "Bienvenido a la API!" });
 });
 
 routes.route('/getusers')
     .get(( req, res ) => {
-		
         const options = {
             url: config.serviceUrl,
             auth: {
