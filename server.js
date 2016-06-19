@@ -8,7 +8,7 @@ const request = require('request'),
       bcrypt = require('bcryptjs'),
       User = require('./app/models/user'),
       config = require('./config'),
-      port = process.env.PORT || 8080;
+      nunjucks = require('nunjucks');
 	  
 mongoose.connect(config.database);
 
@@ -23,13 +23,20 @@ db.on('open', function() {
     console.log('Conectado a la base de datos');
 });
 
+nunjucks.configure('assets', {
+    autoescape: true,
+    noCache: true,
+    express: app
+});
+
 require('dotenv').config();
 
-const apigeeUser = process.env.APIGEE_USER,
+const port = process.env.PORT || 8080,
+      apigeeUser = process.env.APIGEE_USER,
       apigeePass = process.env.APIGEE_PASS;
 
 app.get('/', ( req, res ) => {
-    res.send(`La API se encuentra en http://localhost:${port}/api`);
+    res.render('index.html', { message: `La API se encuentra en http://localhost:${port}/api` });
 });
 
 app.post('/register', ( req, res ) => {
