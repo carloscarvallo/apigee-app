@@ -5,6 +5,7 @@ const request = require('request'),
 	  bodyParser = require('body-parser'),
 	  morgan = require('morgan'),
 	  mongoose = require('mongoose'),
+	  bcrypt = require('bcryptjs');
 	  User = require('./app/models/user'),
 	  config = require('./config'),
 	  port = process.env.PORT || 8080;
@@ -32,10 +33,11 @@ app.get('/', ( req, res ) => {
 });
 
 app.post('/register', ( req, res ) => {
-		
-	var user = new User({
+	// hash password
+	const passHashed = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10));
+	let user = new User({
 		name: req.body.name,
-		password: req.body.password,
+		password: passHashed,
 		email: req.body.email
 	});
 		
@@ -68,11 +70,8 @@ routes.post('/authenticate', ( req, res ) => {
             res.json({ success: false, message: 'Authentication failed' })
             
         } else if (user) {
-            if (user.password != req.body.password) {
-                res.json({ success: false, message: 'Authentication failed. Wrong password' });
-                
-            } else {
-				
+			// compare password
+            if (bcrypt.compareSync(req.body.password, user.password)) {
 				const options = {
 					url: config.oauthUrl,
 					method: 'POST',
@@ -94,7 +93,9 @@ routes.post('/authenticate', ( req, res ) => {
 						token: token
 					});
 				});
-                
+				
+            } else {
+				res.json({ success: false, message: 'Authentication failed. Wrong password' });
             }
         }
     });
@@ -102,7 +103,6 @@ routes.post('/authenticate', ( req, res ) => {
 
 routes.use(( req, res, next ) => {
     var token = req.body.token || req.query.token || req.headers['x-access-token'];
-    
     if (token) {
 		// TODO: tratar expiracion del Token, etc
 		req.token = token;
