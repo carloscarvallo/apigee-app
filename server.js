@@ -60,7 +60,7 @@ const routes = express.Router();
 routes.post('/authenticate', ( req, res ) => {
     
     User.findOne({
-        name: req.body.email
+        email: req.body.email
     }, function(err, user) {
         if (err) throw err;
         
@@ -82,10 +82,10 @@ routes.post('/authenticate', ( req, res ) => {
 					}
 				};
 				
-				request(options, ( err, res ) => {
+				request(options, ( err, response ) => {
 					if (err) throw err
 					
-					let json = JSON.parse(res.body);
+					let json = JSON.parse(response.body);
 					let token = json.access_token;
 					
 					res.json({
