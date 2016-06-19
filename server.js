@@ -1,3 +1,4 @@
+'use strict';
 const request = require('request'),
 	  express = require('express'),
 	  app = express(),
@@ -27,7 +28,7 @@ const apigeeUser = process.env.APIGEE_USER,
 	  apigeePass = process.env.APIGEE_PASS;
 
 app.get('/', ( req, res ) => {
-	console.log(`La API se encuentra en http://localhost:${port}/api`);
+	res.send(`La API se encuentra en http://localhost:${port}/api`);
 });
 
 app.post('/register', ( req, res ) => {
