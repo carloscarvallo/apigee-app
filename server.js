@@ -73,18 +73,18 @@ routes.post('/authenticate', ( req, res ) => {
             } else {
 				
 				const options = {
-				    url: config.oauthUrl,
-				    method: 'POST',
-				    auth: {
-				        user: apigeeUser,
-				        pass: apigeePass
-				    }
+					url: config.oauthUrl,
+					method: 'POST',
+					auth: {
+						user: apigeeUser,
+						pass: apigeePass
+					}
 				};
 				
 				request(options, ( err, res ) => {
 					if (err) throw err
 					
-				    let json = JSON.parse(res.body);
+					let json = JSON.parse(res.body);
 					let token = json.access_token;
 					
 					res.json({
