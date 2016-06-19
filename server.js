@@ -117,11 +117,11 @@ routes.use(function(req, res, next) {
     }
 });
 
-router.get('/', ( req, res ) => {
+routes.get('/', ( req, res ) => {
 	res.json({ mensaje: "Bienvenido a la API!" });
 });
 
-router.route('/getusers')
+routes.route('/getusers')
 	.get(( req, res ) => {
 		
 		const options = {
@@ -136,7 +136,7 @@ router.route('/getusers')
 		});
 	});
 	
-app.use('/api', router);
+app.use('/api', routes);
 
 app.listen(port, () => {
 	console.log('app listening in', port);
