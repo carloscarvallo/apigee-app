@@ -4,15 +4,12 @@ const request = require('request'),
 	  bodyParser = require('body-parser'),
 	  morgan = require('morgan'),
 	  mongoose = require('mongoose'),
-	  jwt = require('jsonwebtoken'),
 	  User = require('./app/models/user'),
 	  config = require('./config'),
-	  
 	  port = process.env.PORT || 8080;
 	  
 mongoose.connect(config.database);
 
-app.set('superSecret', config.secret);
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(morgan('dev'));
@@ -62,7 +59,7 @@ const routes = express.Router();
 routes.post('/authenticate', function(req, res) {
     
     User.findOne({
-        name: req.body.name
+        name: req.body.email
     }, function(err, user) {
         if (err) throw err;
         
