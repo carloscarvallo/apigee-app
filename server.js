@@ -48,7 +48,31 @@ app.get('/', function(req, res) {
 	console.log(`La API se encuentra en http://localhost:${port}/api`);
 });
 
-const router = express.Router();
+app.post('/register', function(req, res) {
+		
+	var user = new User({
+		name: req.body.name,
+		password: req.body.password,
+		email: req.body.email
+	});
+		
+	user.save(function(err) {
+		if (!err) {            
+			console.log('User saved!');
+			res.json({ success: true, message: 'Usuario creado!' });
+				
+		} else {
+			res.json({ success: false, message: 'Usuario no creado!' });
+			if (err.code === 11000) {
+				console.log('Este email ya existe prueba con otro');
+			}
+		}
+	});
+});
+
+// API ROUTES ------------------------------------------------------------------
+
+const routes = express.Router();
 
 routes.post('/authenticate', function(req, res) {
     
@@ -97,14 +121,9 @@ routes.use(function(req, res, next) {
     var token = req.body.token || req.query.token || req.headers['x-access-token'];
     
     if (token) {
-        jwt.verify(token, app.get('superSecret'), function(err, decoded) {
-            if (!err) {
-                req.decoded = decoded;
-                next();
-            } else {
-                return res.json({ success: false, message: 'Token invalido' });
-            }
-        });
+		// TODO: tratar expiracion del Token, etc
+		req.token = token;
+		next();
     } else {
         return res.status(403).send({
             success: false,
@@ -117,8 +136,16 @@ router.get('/', ( req, res ) => {
 	res.json({ mensaje: "Bienvenido a la API!" });
 });
 
-router.route('/users')
+router.route('/getusers')
 	.get(( req, res ) => {
+		
+		const options = {
+			url: config.serviceUrl,
+			auth: {
+				'bearer': req.token
+			}
+		};
+		
 		request(options, ( err, response ) => {
 			res.json(JSON.parse( response.body ));
 		});
