@@ -45,7 +45,7 @@ app.get('/register', ( req, res ) => {
 });
 
 app.post('/register', ( req, res ) => {
-	// hash password
+    // hash password
     const passHashed = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10));
     let user = new User({
         name: req.body.name,
@@ -148,5 +148,5 @@ routes.route('/getusers')
 app.use('/api', routes);
 
 app.listen(port, () => {
-	console.log('app listening in', port);
+    console.log('app listening in', port);
 });

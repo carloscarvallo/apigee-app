@@ -1,19 +1,22 @@
-<h1>Crear cuenta</h1>
-<form method="post">
-    Nombre:
-    <input type="text" name="name" required="true">
-    <br>
-    Email:
-    <input type="email" name="email" required="true">
-    <br>
-    Password:
-    <input type="password" name="password" required="true">
-    <br>
-    <input type="submit" value="Enviar">
-</form>
-
-{% if error %}
-    <p>{{ error }}</p>
-{% elif message %}
-    <p>{{ message }}</p>
-{% endif %}
+{% extends "base.html" %}
+{% block title %}Register{% endblock %}
+{% block content %}
+    <h1>Crear cuenta</h1>
+    <form method="post">
+        Nombre:
+        <input type="text" name="name" required="true">
+        <br>
+        Email:
+        <input type="email" name="email" required="true">
+        <br>
+        Password:
+        <input type="password" name="password" required="true">
+        <br>
+        <input type="submit" value="Enviar">
+    </form>
+    {% if error %}
+        <p>{{ error }}</p>
+    {% elif message %}
+        <p>{{ message }}</p>
+    {% endif %}
+{% endblock %}

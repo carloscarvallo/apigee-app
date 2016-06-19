@@ -1,11 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Document</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %}Index{% endblock %}
+{% block content %}
     <h1>Apigee Client</h1>
-    <p>Bienvenido al Home Page! <a href="/register">Registrate</a> para usar la API o <a href="/login">Logueate</a> para continuar...</p>
-</body>
-</html>
+    <p>Bienvenido al Home Page! <a href="/register">Registrate</a> para usar la API o <a href="/login">Logueate</a> para continuar...</p>    
+{% endblock %}
