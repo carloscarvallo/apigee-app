@@ -60,22 +60,43 @@ routes.post('/authenticate', function(req, res) {
                 res.json({ success: false, message: 'Authentication failed. Wrong password' });
                 
             } else {
-                var token = jwt.sign(user, app.get('superSecret'));
-                
-                res.json({
-                    success: true,
-                    message: 'Token creado!',
-                    token: token
-                });
+				
+				request(options, (err, res) => {
+					if (err) throw err
+					
+				    let json = JSON.parse(res.body);
+					let token = json.access_token;
+					
+					res.json({
+						success: true,
+						message: 'Token creado!',
+						token: token
+					});
+				});
                 
             }
         }
     });
 });
 
-router.use(( req, res, next ) => {
-	console.log('...Something happen');
-	next();
+routes.use(function(req, res, next) {
+    var token = req.body.token || req.query.token || req.headers['x-access-token'];
+    
+    if (token) {
+        jwt.verify(token, app.get('superSecret'), function(err, decoded) {
+            if (!err) {
+                req.decoded = decoded;
+                next();
+            } else {
+                return res.json({ success: false, message: 'Token invalido' });
+            }
+        });
+    } else {
+        return res.status(403).send({
+            success: false,
+            message: 'No token provided'
+        });
+    }
 });
 
 router.get('/', ( req, res ) => {
