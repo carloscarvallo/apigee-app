@@ -5,7 +5,7 @@ const request = require('request'),
 	  bodyParser = require('body-parser'),
 	  morgan = require('morgan'),
 	  mongoose = require('mongoose'),
-	  bcrypt = require('bcryptjs');
+	  bcrypt = require('bcryptjs'),
 	  User = require('./app/models/user'),
 	  config = require('./config'),
 	  port = process.env.PORT || 8080;
@@ -70,32 +70,32 @@ routes.post('/authenticate', ( req, res ) => {
             res.json({ success: false, message: 'Authentication failed' })
             
         } else if (user) {
-			// compare password
+            // compare password
             if (bcrypt.compareSync(req.body.password, user.password)) {
-				const options = {
-					url: config.oauthUrl,
-					method: 'POST',
-					auth: {
-						user: apigeeUser,
-						pass: apigeePass
-					}
-				};
+            	const options = {
+				url: config.oauthUrl,
+				method: 'POST',
+				auth: {
+					user: apigeeUser,
+					pass: apigeePass
+				}
+			};
 				
-				request(options, ( err, response ) => {
-					if (err) throw err
-					
-					let json = JSON.parse(response.body);
-					let token = json.access_token;
-					
-					res.json({
-						success: true,
-						message: 'Token creado!',
-						token: token
-					});
+			request(options, ( err, response ) => {
+				if (err) throw err
+
+				let json = JSON.parse(response.body);
+				let token = json.access_token;
+
+				res.json({
+					success: true,
+					message: 'Token creado!',
+					token: token
 				});
+			});
 				
             } else {
-				res.json({ success: false, message: 'Authentication failed. Wrong password' });
+            	res.json({ success: false, message: 'Authentication failed. Wrong password' });
             }
         }
     });
@@ -105,8 +105,8 @@ routes.use(( req, res, next ) => {
     var token = req.body.token || req.query.token || req.headers['x-access-token'];
     if (token) {
 		// TODO: tratar expiracion del Token, etc
-		req.token = token;
-		next();
+        req.token = token;
+        next();
     } else {
         return res.status(403).send({
             success: false,
