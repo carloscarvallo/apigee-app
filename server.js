@@ -1,44 +1,41 @@
 const request = require('request'),
 	  express = require('express'),
 	  app = express(),
+	  morgan = require('morgan');
 	  config = require('./config');
+
 /*
 require('dotenv').config();
 
 const port = process.env.PORT || 8080,
 	  url = config.serviceUrl,
 	  apigeeToken = process.env.APIGEE_TOKEN;
-*/
+
 const options = {
 	url: url,
 	auth: {
 		'bearer': apigeeToken
 	}
 };
-
-const middleware = ( req, res, next ) => {
-	console.log('...Something happen');
-	next();
-};
-
-const greet = ( req, res ) => {
-	res.json({ mensaje: "bienvenido a mi API" });
-};
-
-const getService = ( req, res ) => {
-	request(options, ( err, response ) => {
-		res.json(JSON.parse( response.body ));
-	});
-};
+*/
 
 const router = express.Router();
 
-router.use( middleware );
+router.use(( req, res, next ) => {
+	console.log('...Something happen');
+	next();
+});
 
-router.get('/', greet);
+router.get('/', ( req, res ) => {
+	res.json({ mensaje: "Bienvenido a la API!" });
+});
 
 router.route('/users')
-	.get( getService );
+	.get(( req, res ) => {
+		request(options, ( err, response ) => {
+			res.json(JSON.parse( response.body ));
+		});
+	});
 	
 app.use('/api', router);
 
