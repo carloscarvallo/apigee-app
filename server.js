@@ -39,7 +39,39 @@ const options = {
 };
 */
 
+app.get('/', function(req, res) {
+	console.log(`La API se encuentra en http://localhost:${port}/api`);
+});
+
 const router = express.Router();
+
+routes.post('/authenticate', function(req, res) {
+    
+    User.findOne({
+        name: req.body.name
+    }, function(err, user) {
+        if (err) throw err;
+        
+        if (!user) {
+            res.json({ success: false, message: 'Authentication failed' })
+            
+        } else if (user) {
+            if (user.password != req.body.password) {
+                res.json({ success: false, message: 'Authentication failed. Wrong password' });
+                
+            } else {
+                var token = jwt.sign(user, app.get('superSecret'));
+                
+                res.json({
+                    success: true,
+                    message: 'Token creado!',
+                    token: token
+                });
+                
+            }
+        }
+    });
+});
 
 router.use(( req, res, next ) => {
 	console.log('...Something happen');
