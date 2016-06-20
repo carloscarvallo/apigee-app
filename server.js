@@ -146,7 +146,7 @@ routes.post('/authenticate', ( req, res ) => {
             res.json({ success: false, message: 'Authentication failed' })
             
         } else if (user) {
-            if ((req.user.password || req.session.user.password || req.body.password) == user.password) {
+            if ((req.user.password || req.session.user.password) === user.password || bcrypt.compareSync(req.body.password, user.password)) {
             	const options = {
                     url: config.oauthUrl,
                     method: 'POST',
@@ -161,13 +161,7 @@ routes.post('/authenticate', ( req, res ) => {
 
                     let json = JSON.parse(response.body);
                     let token = json.access_token;
-
-                    res.json({
-                        success: true,
-                        message: 'Token creado!',
-                        token: token
-                    });
-                    console.log(token);
+                    res.render('dashboard.html', { token: token });
                 });
 				
             } else {

@@ -10,4 +10,7 @@
     <form action="/api/authenticate" method="post">
         <button type="submit">Request a Token API!</button>
     </form>
+    {% if token %}
+        <p>Token: {{ token }}</p>
+    {% endif %}
 {% endblock %}
