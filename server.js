@@ -255,6 +255,37 @@ routes.route('/user/post')
             }
         });
     });
+    
+routes.route('/update_user')
+    .get(( req, res ) => {
+        res.render('update_user.html');
+    });
+    
+routes.route('/user/update')
+    .post(( req, res ) => {
+        
+        var options = {
+            method: 'PUT',
+            url: config.serviceUpdate,
+            headers: {
+                'content-type': 'application/json',
+                accept: 'application/json' 
+            },
+            auth: {
+                'bearer': req.token
+            },
+            body: req.body,
+            json: true
+        };
+        
+        request(options, ( err, response ) => {
+            if (response.body.status == 500) {
+                res.render('update_user.html', { error: 'User not updated' });
+            } else {
+                res.render('update_user.html', { message: 'User update!' });
+            }
+        });
+    });
 	
 app.use('/api', routes);
 
