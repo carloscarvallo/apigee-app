@@ -2,9 +2,9 @@
 {% block title %}Update User{% endblock %}
 {% block content %}
     <h1>Editar usuario</h1>
-    <form method="post" action="/api/user/update">
+    <form method="post" action="/api/user/update/{{ value }}">
         Id:
-        <input type="text" class="form-control" name="id" id="disableInput" required="true" placeholder="{{ value }}" disabled="" >
+        <input type="text" class="form-control" name="id" id="disableInput" required="true" placeholder="{{ value }}" disabled="">
         <br>
         Nombre:
         <input type="text" class="form-control" name="name" required="true">
@@ -15,8 +15,10 @@
         MSISDN:
         <input type="text" class="form-control" name="msisdn" required="true">
         <br>
-        <input type="submit" value="Enviar">
+        <input type="submit" class="btn btn-success" value="Enviar">
     </form>
+    <br>
+    <a href="/api/user/delete/{{ value }}" class="btn btn-danger" method="post">Delete User</a>
     {% if error %}
         <p>{{ error }}</p>
     {% elif message %}

@@ -263,12 +263,12 @@ routes.route('/update_user/:id')
         res.render('update_user.html', { value: req.params.id });
     });
     
-routes.route('/user/update')
+routes.route('/user/update/:id')
     .post(( req, res ) => {
-        
+        console.log(req.body);
         var options = {
             method: 'PUT',
-            url: config.serviceUpdate,
+            url: config.serviceUpdate + req.params.id,
             headers: {
                 'content-type': 'application/json',
                 accept: 'application/json' 
@@ -294,12 +294,12 @@ routes.route('/delete_user')
         res.render('delete_user.html');
     });
     
-routes.route('/user/delete')
-    .post(( req, res ) => {
+routes.route('/user/delete/:id')
+    .get(( req, res ) => {
         
         var options = {
             method: 'DELETE',
-            url: config.idEndpoint + req.body.id,
+            url: config.idEndpoint + req.params.id,
             headers: {
                 'content-type': 'application/json',
                 accept: 'application/json' 
@@ -312,9 +312,9 @@ routes.route('/user/delete')
         request(options, ( err, response, body ) => {
             var respuesta = JSON.parse(body);
             if (respuesta.status == 500) {
-                res.render('delete_user.html', { error: 'User not deleted' });
+                res.render('update_user.html', { error: 'User not deleted' });
             } else {
-                res.render('delete_user.html', { message: 'User deleted!' });
+                res.render('update_user.html', { message: 'User deleted!' });
             }
         });
     });
