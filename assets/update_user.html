@@ -15,20 +15,20 @@
         MSISDN:
         <input type="text" class="form-control" name="msisdn" required="true">
         <br>
-        <input type="submit" class="btn btn-success" value="Enviar">
+        <input type="submit" class="btn btn-success" value="Actualizar">
     </form>
     <br>
     <a href="/api/user/delete/{{ value }}" class="btn btn-danger" method="post">Delete User</a>
+    <br>
     {% if error %}
-        <p>{{ error }}</p>
+        <div class="alert alert-dismissible alert-danger">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                {{ error }}
+        </div>
     {% elif message %}
-        <p>{{ message }}</p>
+        <div class="alert alert-dismissible alert-success">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                {{ message }}
+        </div>
     {% endif %}
 {% endblock %}
-
-<!--  
-<div class="form-group">
-  <label class="control-label" for="disabledInput">Disabled input</label>
-  <input class="form-control" id="disabledInput" type="text" placeholder="Disabled input here..." disabled="">
-</div>
--->
