@@ -224,6 +224,38 @@ routes.route('/user/:id')
             res.render('users.html', { users: items.user, flag: true });
         });
     });
+    
+routes.route('/create_user')
+    .get(( req, res ) => {
+        res.render('create_user.html');
+    });
+    
+routes.route('/user/post')
+    .post(( req, res ) => {
+        
+        var options = {
+            method: 'POST',
+            url: 'http://carloscarvallo-test.apigee.net/v1/edge/user/services/user/post',
+            headers: {
+                'content-type': 'application/json',
+                accept: 'application/json' 
+            },
+            auth: {
+                'bearer': req.token
+            },
+            body: req.body,
+            json: true
+        };
+        
+        request(options, ( err, response ) => {
+            if (response.body.status == 500) {
+                res.render('create_user.html', { error: 'User not created' });
+            } else {
+                res.render('create_user.html', { message: 'User created!' });
+                //console.log(response.body);
+            }
+        });
+    });
 	
 app.use('/api', routes);
 
