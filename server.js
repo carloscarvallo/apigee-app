@@ -195,7 +195,7 @@ routes.get('/', ( req, res ) => {
     res.json({ mensaje: "Bienvenido a la API!" });
 });
 
-routes.route('/getusers')
+routes.route('/users')
     .get(( req, res ) => {
         const options = {
             url: config.serviceUrl,
@@ -206,13 +206,22 @@ routes.route('/getusers')
 		
         request(options, ( err, response ) => {
             var items = JSON.parse(response.body);
-            var objuser = {};
-            /*
-            items.users.map(function(item, i) {
-                console.log(item);
-            });
-            */
             res.render('users.html', { users: items.users });
+        });
+    });
+    
+routes.route('/user/:id')
+    .get(( req, res ) => {
+        const options = {
+            url: config.idEndpoint + req.params.id,
+            auth: {
+                'bearer': req.token
+            }
+        };
+        
+        request(options, ( err, response ) => {
+            var items = JSON.parse(response.body);
+            res.render('users.html', { users: items.user, flag: true });
         });
     });
 	

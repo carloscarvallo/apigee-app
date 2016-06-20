@@ -1,13 +1,25 @@
 {% extends "base.html" %}
 {% block title %}Dashboard{% endblock %}
 {% block content %}
+    
+    {% if flag %}
     <table style="width:100%">
-    {% for user in users %}
+            <tr>
+                <td>{{ users.id }}</td>
+                <td>{{ users.name }}</td> 
+                <td>{{ users.email }}</td>
+            </tr>
+    </table>
+    {% else %}
+
+    <table style="width:100%">
+        {% for user in users %}
             <tr>
                 <td>{{ user.id }}</td>
                 <td>{{ user.name }}</td> 
                 <td>{{ user.email }}</td>
             </tr>
-    {% endfor %}
+        {% endfor %}
     </table>
+    {% endif %}
 {% endblock %}
