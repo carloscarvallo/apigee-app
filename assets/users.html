@@ -7,6 +7,7 @@
                 <th>#</th>
                 <th>Nombre</th>
                 <th>Email</th>
+                <th>Editar</th>
             </tr>
         </thead>
         <tbody>
@@ -15,6 +16,7 @@
                 <td>{{ users.id }}</td>
                 <td>{{ users.name }}</td> 
                 <td>{{ users.email }}</td>
+                <td><a href="/api/user/{{ users.id }}">Editar</a></td>
             </tr>
     {% else %}
         {% for user in users %}
@@ -22,6 +24,7 @@
                 <td>{{ user.id }}</td>
                 <td>{{ user.name }}</td> 
                 <td>{{ user.email }}</td>
+                <td><a href="/api/user/{{ user.id }}">Editar</a></td>
             </tr>
         {% endfor %}
     {% endif %}
