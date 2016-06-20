@@ -235,7 +235,7 @@ routes.route('/user/post')
         
         var options = {
             method: 'POST',
-            url: 'http://carloscarvallo-test.apigee.net/v1/edge/user/services/user/post',
+            url: config.servicePost,
             headers: {
                 'content-type': 'application/json',
                 accept: 'application/json' 
@@ -252,7 +252,6 @@ routes.route('/user/post')
                 res.render('create_user.html', { error: 'User not created' });
             } else {
                 res.render('create_user.html', { message: 'User created!' });
-                //console.log(response.body);
             }
         });
     });
