@@ -6,9 +6,10 @@ const request = require('request'),
       morgan = require('morgan'),
       mongoose = require('mongoose'),
       bcrypt = require('bcryptjs'),
+      nunjucks = require('nunjucks'),
+      sessions = require('client-sessions'),
       User = require('./app/models/user'),
-      config = require('./config'),
-      nunjucks = require('nunjucks');
+      config = require('./config');
 
 mongoose.connect(config.database);
 
@@ -35,6 +36,38 @@ require('dotenv').config();
 const port = process.env.PORT || 8080,
       apigeeUser = process.env.APIGEE_USER,
       apigeePass = process.env.APIGEE_PASS;
+      
+app.use(sessions({
+    cookieName: 'session',
+    secret: 'crazydiamond',
+    duration: 30 * 60 * 1000,
+    activeDuration: 5 * 60 * 1000
+}));
+
+app.use(( req, res, next ) => {
+    if (req.session && req.session.user) {
+        User.findOne({ email: req.session.user.email }, ( err, user ) => {
+            if (err) throw err
+            if (user) {
+                req.user = user;
+                delete req.user.password;
+                req.session.user = req.user;
+                res.locals.user = req.user;
+            }
+            next();
+        });
+    } else {
+        next();
+    }
+});
+
+let requireLogin = ( req, res, next ) => {
+    if (!req.user) {
+        res.redirect('/login');
+    } else {
+        next();
+    }
+};
 
 app.get('/', ( req, res ) => {
     res.render('index.html');
@@ -56,8 +89,8 @@ app.post('/register', ( req, res ) => {
     user.save(( err ) => {
         if (!err) {            
             console.log('Usuario creado!');
-            res.render('register.html', { message: 'Usuario Registrado!' });
-				
+            setTimeout( res.redirect('/dashboard'), 3000 );
+            
         } else {
             console.log('Usuario no creado!');
             if (err.code === 11000) {
@@ -67,15 +100,40 @@ app.post('/register', ( req, res ) => {
     });
 });
 
-// API ROUTES ------------------------------------------------------------------
+app.get('/login', ( req, res ) => {
+    res.render('login.html');
+});
 
+app.post('/login', ( req, res ) => {
+    User.findOne({ email: req.body.email }, ( err, user ) => {
+        if (err) throw err;
+        
+        if (!user) {
+            res.render('login.html', { error: 'Authentication failed.' });
+        } else if (user) {
+            // compare password
+            if (bcrypt.compareSync(req.body.password, user.password)) {
+				req.session.user = user;
+                setTimeout( res.redirect('/dashboard'), 3000 );
+                
+            } else {
+                res.render('login.html', { error: 'Authentication failed.' });
+            }
+        }
+    });
+});
+
+app.get('/dashboard', requireLogin, ( req, res ) => {
+    res.render('dashboard.html');
+});
+
+// API ROUTES ------------------------------------------------------------------
+/*
 const routes = express.Router();
 
 routes.post('/authenticate', ( req, res ) => {
     
-    User.findOne({
-        email: req.body.email
-    }, function(err, user) {
+    User.findOne({ email: req.body.email }, ( err, user ) => {
         if (err) throw err;
         
         if (!user) {
@@ -146,7 +204,7 @@ routes.route('/getusers')
     });
 	
 app.use('/api', routes);
-
+*/
 app.listen(port, () => {
     console.log('app listening in', port);
 });
