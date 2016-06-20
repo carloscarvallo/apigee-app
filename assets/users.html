@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+    <table style="width:100%">
+    {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.name }}</td> 
+                <td>{{ user.email }}</td>
+            </tr>
+    {% endfor %}
+    </table>
+{% endblock %}

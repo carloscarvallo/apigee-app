@@ -162,7 +162,7 @@ routes.post('/authenticate', ( req, res ) => {
 				
                 request(options, ( err, response ) => {
                     if (err) throw err
-
+                    console.log(response.body);
                     let json = JSON.parse(response.body);
                     let token = json.access_token;
                     res.render('dashboard.html', { token: token });
@@ -205,7 +205,14 @@ routes.route('/getusers')
         };
 		
         request(options, ( err, response ) => {
-            res.json(JSON.parse( response.body ));
+            var items = JSON.parse(response.body);
+            var objuser = {};
+            /*
+            items.users.map(function(item, i) {
+                console.log(item);
+            });
+            */
+            res.render('users.html', { users: items.users });
         });
     });
 	
