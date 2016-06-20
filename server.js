@@ -13,6 +13,7 @@ const request = require('request'),
 
 mongoose.connect(config.database);
 
+app.use('/static', express.static(__dirname + '/public'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(morgan('dev'));
