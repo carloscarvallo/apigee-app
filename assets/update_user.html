@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Update User{% endblock %}
+{% block content %}
+    <h1>Actualizar usuario</h1>
+    <form method="post" action="/api/user/update">
+        Id:
+        <input type="text" name="id" required="true">
+        <br>
+        Nombre:
+        <input type="text" name="name" required="true">
+        <br>
+        Email:
+        <input type="email" name="email" required="true">
+        <br>
+        MSISDN:
+        <input type="text" name="msisdn" required="true">
+        <br>
+        <input type="submit" value="Enviar">
+    </form>
+    {% if error %}
+        <p>{{ error }}</p>
+    {% elif message %}
+        <p>{{ message }}</p>
+    {% endif %}
+{% endblock %}

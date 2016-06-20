@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 {% block title %}Index{% endblock %}
 {% block content %}
-    <h1>Apigee Client</h1>
-    <p>Bienvenido al Home Page! <a href="/register">Registrate</a> para usar la API o <a href="/login">Logueate</a> para continuar...</p>    
+    <div class="jumbotron">
+        <h1>Apigee Client</h1>
+        <p>Bienvenido al Home Page! <a href="/register">Registrate</a> si aun no eres usuario</p>
+        <p><a href="/login" class="btn btn-primary btn-lg">Login</a></p>
+    </div>
 {% endblock %}
