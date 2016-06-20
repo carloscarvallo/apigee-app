@@ -2,18 +2,24 @@
 {% block title %}Dashboard{% endblock %}
 {% block content %}
     <h1>Dashboard</h1>
-    <p>Bienvenido! estas logueado.</p>
+    <p class="lead">Bienvenido! {{ user.name }}</p>
     <h2>Informacion de Usuario</h2>
-    <p>Nombre: {{ user.name }}</p>
-    <p>Email: {{ user.email }}</p>
-    <p>Fecha de Registro:</p>
+    <p class="lead">Nombre: {{ user.name }}</p>
+    <p class="lead">Email: {{ user.email }}</p>
+    <p class="lead">Fecha de Registro:</p>
     <form action="/api/authenticate" method="post">
-        <button type="submit">Request a Token API!</button>
+        <button type="submit" class="btn btn-primary">Request a Token API!</button>
     </form>
+    <br>
     {% if token %}
-        <p>Token: {{ token }}</p>
+        <p>Access Token: {{ token }}</p>
     {% endif %}
     <form action="/logout" method="get">
-        <button type="submit">Logout</button>
+        <button type="submit" class="btn btn-default">Logout</button>
     </form>
+    <br>
+    {% if token %}
+        <h2>Opciones de la API</h2>
+        <a href="/api/users">Listar Usuarios</a>
+    {% endif %}
 {% endblock %}

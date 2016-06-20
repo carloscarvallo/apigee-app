@@ -4,12 +4,12 @@
     <h1>Ingresar</h1>
     <form method="post">
         Email:
-        <input type="email" name="email" required="true">
+        <input class="form-control" id="focusedInput" type="email" name="email" required="true">
         <br>
         Password:
-        <input type="password" name="password" required="true">
+        <input class="form-control" id="focusedInput" type="password" name="password" required="true">
         <br>
-        <input type="submit" value="Enviar">
+        <input class="form-control" id="focusedInput" type="submit" value="Enviar">
     </form>
     {% if error %}
         <p>{{ error }}</p>
