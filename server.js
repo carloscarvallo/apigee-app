@@ -297,7 +297,7 @@ routes.route('/user/delete')
         
         var options = {
             method: 'DELETE',
-            url: 'http://carloscarvallo-test.apigee.net/v1/edge/user/services/user/' + req.body.id,
+            url: config.idEndpoint + req.body.id,
             headers: {
                 'content-type': 'application/json',
                 accept: 'application/json' 
