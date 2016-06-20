@@ -7,4 +7,7 @@
     <p>Nombre: {{ user.name }}</p>
     <p>Email: {{ user.email }}</p>
     <p>Fecha de Registro:</p>
+    <form action="/api/authenticate" method="post">
+        <button type="submit">Request a Token API!</button>
+    </form>
 {% endblock %}

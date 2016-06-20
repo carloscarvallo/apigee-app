@@ -45,6 +45,7 @@ app.use(sessions({
 }));
 
 app.use(( req, res, next ) => {
+    console.log('pasa por aca');
     if (req.session && req.session.user) {
         User.findOne({ email: req.session.user.email }, ( err, user ) => {
             if (err) throw err
@@ -89,7 +90,7 @@ app.post('/register', ( req, res ) => {
     user.save(( err ) => {
         if (!err) {            
             console.log('Usuario creado!');
-            setTimeout( res.redirect('/dashboard'), 3000 );
+            res.redirect('/dashboard');
             
         } else {
             console.log('Usuario no creado!');
@@ -114,7 +115,7 @@ app.post('/login', ( req, res ) => {
             // compare password
             if (bcrypt.compareSync(req.body.password, user.password)) {
 				req.session.user = user;
-                setTimeout( res.redirect('/dashboard'), 3000 );
+                res.redirect('/dashboard');
                 
             } else {
                 res.render('login.html', { error: 'Authentication failed.' });
@@ -133,20 +134,19 @@ app.get('/logout', function(req, res) {
 });
 
 // API ROUTES ------------------------------------------------------------------
-/*
+
 const routes = express.Router();
 
 routes.post('/authenticate', ( req, res ) => {
-    
-    User.findOne({ email: req.body.email }, ( err, user ) => {
+
+    User.findOne({ email: req.user.email || req.session.user.email || req.body.email }, ( err, user ) => {
         if (err) throw err;
         
         if (!user) {
             res.json({ success: false, message: 'Authentication failed' })
             
         } else if (user) {
-            // compare password
-            if (bcrypt.compareSync(req.body.password, user.password)) {
+            if ((req.user.password || req.session.user.password || req.body.password) == user.password) {
             	const options = {
                     url: config.oauthUrl,
                     method: 'POST',
@@ -167,6 +167,7 @@ routes.post('/authenticate', ( req, res ) => {
                         message: 'Token creado!',
                         token: token
                     });
+                    console.log(token);
                 });
 				
             } else {
@@ -209,7 +210,7 @@ routes.route('/getusers')
     });
 	
 app.use('/api', routes);
-*/
+
 app.listen(port, () => {
     console.log('app listening in', port);
 });
