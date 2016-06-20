@@ -286,6 +286,36 @@ routes.route('/user/update')
             }
         });
     });
+    
+routes.route('/delete_user')
+    .get(( req, res ) => {
+        res.render('delete_user.html');
+    });
+    
+routes.route('/user/delete')
+    .post(( req, res ) => {
+        
+        var options = {
+            method: 'DELETE',
+            url: 'http://carloscarvallo-test.apigee.net/v1/edge/user/services/user/' + req.body.id,
+            headers: {
+                'content-type': 'application/json',
+                accept: 'application/json' 
+            },
+            auth: {
+                'bearer': req.token
+            }
+        };
+        
+        request(options, ( err, response, body ) => {
+            var respuesta = JSON.parse(body);
+            if (respuesta.status == 500) {
+                res.render('delete_user.html', { error: 'User not deleted' });
+            } else {
+                res.render('delete_user.html', { message: 'User deleted!' });
+            }
+        });
+    });
 	
 app.use('/api', routes);
 
