@@ -257,9 +257,10 @@ routes.route('/user/post')
         });
     });
     
-routes.route('/update_user')
+routes.route('/update_user/:id')
     .get(( req, res ) => {
-        res.render('update_user.html');
+        console.log(req.params.id);
+        res.render('update_user.html', { value: req.params.id });
     });
     
 routes.route('/user/update')

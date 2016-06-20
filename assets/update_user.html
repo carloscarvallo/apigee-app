@@ -1,19 +1,19 @@
 {% extends "base.html" %}
 {% block title %}Update User{% endblock %}
 {% block content %}
-    <h1>Actualizar usuario</h1>
+    <h1>Editar usuario</h1>
     <form method="post" action="/api/user/update">
         Id:
-        <input type="text" name="id" required="true">
+        <input type="text" class="form-control" name="id" id="disableInput" required="true" placeholder="{{ value }}" disabled="" >
         <br>
         Nombre:
-        <input type="text" name="name" required="true">
+        <input type="text" class="form-control" name="name" required="true">
         <br>
         Email:
-        <input type="email" name="email" required="true">
+        <input type="email" class="form-control" name="email" required="true">
         <br>
         MSISDN:
-        <input type="text" name="msisdn" required="true">
+        <input type="text" class="form-control" name="msisdn" required="true">
         <br>
         <input type="submit" value="Enviar">
     </form>
@@ -23,3 +23,10 @@
         <p>{{ message }}</p>
     {% endif %}
 {% endblock %}
+
+<!--  
+<div class="form-group">
+  <label class="control-label" for="disabledInput">Disabled input</label>
+  <input class="form-control" id="disabledInput" type="text" placeholder="Disabled input here..." disabled="">
+</div>
+-->

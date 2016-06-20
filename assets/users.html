@@ -14,17 +14,17 @@
     {% if flag %}
             <tr>
                 <td>{{ users.id }}</td>
-                <td>{{ users.name }}</td> 
-                <td>{{ users.email }}</td>
-                <td><a href="/api/user/{{ users.id }}">Editar</a></td>
+                <td><a href="/api/user/{{ user.id }}">{{ users.name }}</a></td> 
+                <td><a href="/api/user/{{ user.id }}">{{ users.email }}</a></td>
+                <td><a href="/api/update_user">Editar</a></td>
             </tr>
     {% else %}
         {% for user in users %}
             <tr>
                 <td>{{ user.id }}</td>
-                <td>{{ user.name }}</td> 
-                <td>{{ user.email }}</td>
-                <td><a href="/api/user/{{ user.id }}">Editar</a></td>
+                <td><a href="/api/user/{{ user.id }}">{{ user.name }}</a></td> 
+                <td><a href="/api/user/{{ user.id }}">{{ user.email }}</a></td>
+                <td><a href="/api/update_user/{{ user.id }}">Editar</a></td>
             </tr>
         {% endfor %}
     {% endif %}
