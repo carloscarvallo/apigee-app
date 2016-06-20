@@ -13,4 +13,7 @@
     {% if token %}
         <p>Token: {{ token }}</p>
     {% endif %}
+    <form action="/logout" method="get">
+        <button type="submit">Logout</button>
+    </form>
 {% endblock %}

@@ -53,6 +53,7 @@ app.use(( req, res, next ) => {
                 delete req.user.password;
                 req.session.user = req.user;
                 res.locals.user = req.user;
+                res.locals.token = req.session.token;
             }
             next();
         });
@@ -70,7 +71,11 @@ let requireLogin = ( req, res, next ) => {
 };
 
 app.get('/', ( req, res ) => {
-    res.render('index.html');
+    if (!req.user) {
+        res.render('index.html');
+    } else {
+        res.render('dashboard.html');
+    }
 });
 
 app.get('/register', ( req, res ) => {
@@ -79,7 +84,7 @@ app.get('/register', ( req, res ) => {
 
 app.post('/register', ( req, res ) => {
     // hash password
-    const passHashed = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10));
+    let passHashed = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10));
     let user = new User({
         name: req.body.name,
         password: passHashed,
