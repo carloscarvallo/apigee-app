@@ -46,6 +46,7 @@ app.use(sessions({
 
 app.use(( req, res, next ) => {
     console.log('pasa por aca');
+    console.log("token ", req.session.token);
     if (req.session && req.session.user) {
         User.findOne({ email: req.session.user.email }, ( err, user ) => {
             if (err) throw err
@@ -162,6 +163,8 @@ routes.post('/authenticate', ( req, res ) => {
                     let json = JSON.parse(response.body);
                     let token = json.access_token;
                     res.render('dashboard.html', { token: token });
+                    req.session.token = token;
+                    
                 });
 				
             } else {
@@ -172,7 +175,7 @@ routes.post('/authenticate', ( req, res ) => {
 });
 
 routes.use(( req, res, next ) => {
-    var token = req.body.token || req.query.token || req.headers['x-access-token'];
+    var token = req.body.token || req.query.token || req.headers['x-access-token'] || req.session.token;
     if (token) {
         // TODO: tratar expiracion del Token, etc
         req.token = token;
