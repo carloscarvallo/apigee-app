@@ -127,6 +127,11 @@ app.get('/dashboard', requireLogin, ( req, res ) => {
     res.render('dashboard.html');
 });
 
+app.get('/logout', function(req, res) {
+    req.session.reset();
+    res.redirect('/');
+});
+
 // API ROUTES ------------------------------------------------------------------
 /*
 const routes = express.Router();
