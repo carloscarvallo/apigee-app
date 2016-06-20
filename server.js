@@ -45,8 +45,6 @@ app.use(sessions({
 }));
 
 app.use(( req, res, next ) => {
-    console.log('pasa por aca');
-    console.log("token ", req.session.token);
     if (req.session && req.session.user) {
         User.findOne({ email: req.session.user.email }, ( err, user ) => {
             if (err) throw err
