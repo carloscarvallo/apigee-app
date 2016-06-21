@@ -16,7 +16,7 @@
                 <td>{{ users.id }}</td>
                 <td><a href="/api/user/{{ user.id }}">{{ users.name }}</a></td> 
                 <td><a href="/api/user/{{ user.id }}">{{ users.email }}</a></td>
-                <td><a href="/api/update_user">Editar</a></td>
+                <td><a href="/api/update_user/{{ users.id }}">Editar</a></td>
             </tr>
     {% else %}
         {% for user in users %}
