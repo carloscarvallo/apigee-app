@@ -1,15 +1,15 @@
 'use strict';
-const request = require('request'),
-      express = require('express'),
-      app = express(),
-      bodyParser = require('body-parser'),
-      morgan = require('morgan'),
-      mongoose = require('mongoose'),
-      bcrypt = require('bcryptjs'),
-      nunjucks = require('nunjucks'),
-      sessions = require('client-sessions'),
-      User = require('./app/models/user'),
-      config = require('./config');
+var request = require('request'),
+    express = require('express'),
+    app = express(),
+    bodyParser = require('body-parser'),
+    morgan = require('morgan'),
+    mongoose = require('mongoose'),
+    bcrypt = require('bcryptjs'),
+    nunjucks = require('nunjucks'),
+    sessions = require('client-sessions'),
+    User = require('./app/models/user'),
+    config = require('./config');
 
 mongoose.connect(config.database);
 
@@ -19,7 +19,7 @@ app.use(bodyParser.json());
 app.use(morgan('dev'));
 
 // connection test
-const db = mongoose.connection;
+var db = mongoose.connection;
 db.on('error', console.error.bind( console, 'connection error: ' ));
 db.on('open', function() {
     console.log('Conectado a la base de datos');
@@ -34,9 +34,9 @@ nunjucks.configure('assets', {
 
 require('dotenv').config();
 
-const port = process.env.PORT || 8080,
-      apigeeUser = process.env.APIGEE_USER,
-      apigeePass = process.env.APIGEE_PASS;
+var port = process.env.PORT || 8080,
+    apigeeUser = process.env.APIGEE_USER,
+    apigeePass = process.env.APIGEE_PASS;
       
 app.use(sessions({
     cookieName: 'session',
@@ -45,9 +45,9 @@ app.use(sessions({
     activeDuration: 5 * 60 * 1000
 }));
 
-app.use(( req, res, next ) => {
+app.use(function( req, res, next ) {
     if (req.session && req.session.user) {
-        User.findOne({ email: req.session.user.email }, ( err, user ) => {
+        User.findOne({ email: req.session.user.email }, function( err, user ) {
             if (err) throw err
             if (user) {
                 req.user = user;
@@ -63,7 +63,7 @@ app.use(( req, res, next ) => {
     }
 });
 
-let requireLogin = ( req, res, next ) => {
+var requireLogin = function( req, res, next ) {
     if (!req.user) {
         res.redirect('/login');
     } else {
@@ -71,7 +71,7 @@ let requireLogin = ( req, res, next ) => {
     }
 };
 
-app.get('/', ( req, res ) => {
+app.get('/', function( req, res ) {
     if (!req.user) {
         res.render('index.html');
     } else {
@@ -79,20 +79,20 @@ app.get('/', ( req, res ) => {
     }
 });
 
-app.get('/register', ( req, res ) => {
+app.get('/register', function( req, res ) {
     res.render('register.html');
 });
 
-app.post('/register', ( req, res ) => {
+app.post('/register', function( req, res ) {
     // hash password
-    let passHashed = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10));
-    let user = new User({
+    var passHashed = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10));
+    var user = new User({
         name: req.body.name,
         password: passHashed,
         email: req.body.email
     });
 		
-    user.save(( err ) => {
+    user.save(function( err ) {
         if (!err) {            
             console.log('Usuario creado!');
             res.redirect('/dashboard');
@@ -106,12 +106,12 @@ app.post('/register', ( req, res ) => {
     });
 });
 
-app.get('/login', ( req, res ) => {
+app.get('/login', function( req, res ) {
     res.render('login.html');
 });
 
-app.post('/login', ( req, res ) => {
-    User.findOne({ email: req.body.email }, ( err, user ) => {
+app.post('/login', function( req, res ) {
+    User.findOne({ email: req.body.email }, function( err, user ) {
         if (err) throw err;
         
         if (!user) {
@@ -129,7 +129,7 @@ app.post('/login', ( req, res ) => {
     });
 });
 
-app.get('/dashboard', requireLogin, ( req, res ) => {
+app.get('/dashboard', requireLogin, function( req, res ) {
     res.render('dashboard.html');
 });
 
@@ -140,11 +140,11 @@ app.get('/logout', function(req, res) {
 
 // API ROUTES ------------------------------------------------------------------
 
-const routes = express.Router();
+var routes = express.Router();
 
-routes.post('/authenticate', ( req, res ) => {
+routes.post('/authenticate', function( req, res ) {
 
-    User.findOne({ email: req.user.email || req.session.user.email || req.body.email }, ( err, user ) => {
+    User.findOne({ email: req.user.email || req.session.user.email || req.body.email }, function( err, user ) {
         if (err) throw err;
         
         if (!user) {
@@ -152,7 +152,7 @@ routes.post('/authenticate', ( req, res ) => {
             
         } else if (user) {
             if ((req.user.password || req.session.user.password) === user.password || bcrypt.compareSync(req.body.password, user.password)) {
-            	const options = {
+            	var options = {
                     url: config.oauthUrl,
                     method: 'POST',
                     auth: {
@@ -161,11 +161,11 @@ routes.post('/authenticate', ( req, res ) => {
                     }
                 };
 				
-                request(options, ( err, response ) => {
+                request(options, function( err, response ) {
                     if (err) throw err
                     console.log(response.body);
-                    let json = JSON.parse(response.body);
-                    let token = json.access_token;
+                    var json = JSON.parse(response.body);
+                    var token = json.access_token;
                     res.render('dashboard.html', { token: token });
                     req.session.token = token;
                     
@@ -178,7 +178,7 @@ routes.post('/authenticate', ( req, res ) => {
     });
 });
 
-routes.use(( req, res, next ) => {
+routes.use(function( req, res, next ) {
     var token = req.body.token || req.query.token || req.headers['x-access-token'] || req.session.token;
     if (token) {
         // TODO: tratar expiracion del Token, etc
@@ -192,47 +192,47 @@ routes.use(( req, res, next ) => {
     }
 });
 
-routes.get('/', ( req, res ) => {
+routes.get('/', function( req, res ) {
     res.json({ mensaje: "Bienvenido a la API!" });
 });
 
 routes.route('/users')
-    .get(( req, res ) => {
-        const options = {
+    .get(function( req, res ) {
+        var options = {
             url: config.serviceUrl,
             auth: {
                 'bearer': req.token
             }
         };
 		
-        request(options, ( err, response ) => {
+        request(options, function( err, response ) {
             var items = JSON.parse(response.body);
             res.render('users.html', { users: items.users });
         });
     });
     
 routes.route('/user/:id')
-    .get(( req, res ) => {
-        const options = {
+    .get(function( req, res ) {
+        var options = {
             url: config.idEndpoint + req.params.id,
             auth: {
                 'bearer': req.token
             }
         };
         
-        request(options, ( err, response ) => {
+        request(options, function( err, response ) {
             var items = JSON.parse(response.body);
             res.render('users.html', { users: items.user, flag: true });
         });
     });
     
 routes.route('/create_user')
-    .get(( req, res ) => {
+    .get(function( req, res ) {
         res.render('create_user.html');
     });
     
 routes.route('/user/post')
-    .post(( req, res ) => {
+    .post(function( req, res ) {
         
         var options = {
             method: 'POST',
@@ -248,7 +248,7 @@ routes.route('/user/post')
             json: true
         };
         
-        request(options, ( err, response ) => {
+        request(options, function( err, response ) {
             if (response.body.status == 500) {
                 res.render('create_user.html', { error: 'User not created' });
             } else {
@@ -258,13 +258,13 @@ routes.route('/user/post')
     });
     
 routes.route('/update_user/:id')
-    .get(( req, res ) => {
+    .get(function( req, res ) {
         console.log(req.params.id);
         res.render('update_user.html', { value: req.params.id });
     });
     
 routes.route('/user/update/:id')
-    .post(( req, res ) => {
+    .post(function( req, res ) {
         console.log(req.body);
         var options = {
             method: 'PUT',
@@ -280,7 +280,7 @@ routes.route('/user/update/:id')
             json: true
         };
         
-        request(options, ( err, response ) => {
+        request(options, function( err, response ) {
             if (response.body.status == 500) {
                 res.render('update_user.html', { error: 'User not updated' });
             } else {
@@ -290,12 +290,12 @@ routes.route('/user/update/:id')
     });
     
 routes.route('/delete_user')
-    .get(( req, res ) => {
+    .get(function( req, res ) {
         res.render('delete_user.html');
     });
     
 routes.route('/user/delete/:id')
-    .get(( req, res ) => {
+    .get(function( req, res ) {
         
         var options = {
             method: 'DELETE',
@@ -309,7 +309,7 @@ routes.route('/user/delete/:id')
             }
         };
         
-        request(options, ( err, response, body ) => {
+        request(options, function( err, response, body ) {
             var respuesta = JSON.parse(body);
             if (respuesta.status == 500) {
                 res.render('update_user.html', { error: 'User not deleted' });
@@ -321,6 +321,6 @@ routes.route('/user/delete/:id')
 	
 app.use('/api', routes);
 
-app.listen(port, () => {
+app.listen(port, function() {
     console.log('app listening in', port);
 });

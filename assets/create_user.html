@@ -15,8 +15,14 @@
         <input type="submit" value="Enviar">
     </form>
     {% if error %}
-        <p>{{ error }}</p>
+        <div class="alert alert-dismissible alert-danger">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                {{ error }}
+        </div>
     {% elif message %}
-        <p>{{ message }}</p>
+        <div class="alert alert-dismissible alert-success">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                {{ message }}
+        </div>
     {% endif %}
 {% endblock %}
